@@ -1,13 +1,13 @@
+import "./styles/main.scss";
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
 import Prompt from './components/Prompt';
 import Loading from './components/Loading';
 
-
 function App() {
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   return (
     <main className="App">
@@ -15,7 +15,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
-      <Prompt setIsLoading={setLoading} />
+      <Prompt setLoading={setLoading} />
     </main>
   );
 }
