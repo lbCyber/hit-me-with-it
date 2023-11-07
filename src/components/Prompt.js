@@ -34,8 +34,14 @@ const Prompt = ({setLoading}) => {
         max_tokens: tokenLength,
         temperature: randomness,
       }).then(async (res) => {
-        setPromptResult(res.choices[0].text);
-        console.log(promptResult.replace("\n", ""))
+        const resPrompt = res.choices[0].text.replace("\n", "")
+        if (typeof resPrompt === "string") {
+          setPromptResult(resPrompt);
+        } else {
+          throw new Error("Something went wrong!");
+        }
+      }).catch((err)=>{
+        alert(err);
       }).finally(()=>{
         setLoading(false);
         doTimer();

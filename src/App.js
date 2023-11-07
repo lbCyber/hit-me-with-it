@@ -7,7 +7,7 @@ import Loading from './components/Loading';
 
 function App() {
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   return (
     <main className="App">
