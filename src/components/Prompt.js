@@ -8,7 +8,7 @@ const { OpenAI } = require("openai");
 const aiConfig = {
   organization: process.env.REACT_APP_OPENAI_ORG,
   apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true, //not actually in danger, info is stored in react env
+  dangerouslyAllowBrowser: true, // not actually in danger, info is stored in react env
 };
 
 const openaiStart = new OpenAI(aiConfig);
@@ -62,7 +62,7 @@ const Prompt = () => {
     setProtags([...protags, protag])
     const prompt = `write a good single line idea for a ${genre} story. The protagonist is ${protag}.`
     const tokenLength = 100;
-    const randomness = 0;
+    const randomness = 1;
     setLoading(true)
     doPrompt();
     setGenre("")

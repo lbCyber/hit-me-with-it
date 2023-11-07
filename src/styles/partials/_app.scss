@@ -1,7 +1,47 @@
-body {
-  font-family: $fontSansSerif;
+html {
+  background: cornflowerblue;
+  height: 100vh;
 }
 
-.promptResponse {
+body {
+  font-family: $fontSansSerif;
+  color: white;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+h1, .promptResponse {
   font-family: $fontSerif;
+}
+
+input {
+  font-family: sans-serif;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid blue;
+  color: white;
+}
+
+footer {
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: linear-gradient(180deg, transparent, #0004);
+  a {
+    color: #e99b36;
+    font-weight: 800;
+  }
+  p {
+    margin: 20px 2%;
+  }
 }
