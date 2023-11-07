@@ -1,10 +1,9 @@
 import { useState } from "react";
 import Typewriter from 'typewriter-effect';
 import responses from '../data/responses.js';
+import Loading from './Loading';
 
 const { OpenAI } = require("openai");
-
-console.log(responses)
 
 const aiConfig = {
   organization: process.env.REACT_APP_OPENAI_ORG,
@@ -14,7 +13,8 @@ const aiConfig = {
 
 const openaiStart = new OpenAI(aiConfig);
 
-const Prompt = ({setLoading}) => {
+const Prompt = () => {
+  const [loading, setLoading] = useState(true);
   const [promptResult, setPromptResult] = useState("");
   const [promptCount, setPromptCount] = useState(0);
   const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -34,7 +34,6 @@ const Prompt = ({setLoading}) => {
       setSubmitDisabled(true);
       setPromptResult("")
       setTypeReady(false)
-      console.log(`start - prompt is ${promptResult}`)
       openaiStart.completions.create({
         prompt: prompt,
         model: "gpt-3.5-turbo-instruct",
@@ -51,7 +50,6 @@ const Prompt = ({setLoading}) => {
       }).catch((err)=>{
         alert(err);
       }).finally(()=>{
-        console.log(`end - prompt is ${promptResult}`)
         setLoading(false);
         setTypeReady(true)
         doTimer();
@@ -71,7 +69,10 @@ const Prompt = ({setLoading}) => {
         <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="Pick a genre." />
         <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="Describe the protagonist." />
       </div>
-      <button onClick={fetchPrompt} disabled={submitDisabled}>Click here for a prompt</button>
+      <div className="buttonContainer">
+        <button onClick={fetchPrompt} disabled={submitDisabled}>Click here for a prompt</button>
+        {loading ? <Loading /> : null}
+      </div>
       {
         typeReady ?
         <Typewriter

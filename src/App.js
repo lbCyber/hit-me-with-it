@@ -1,16 +1,16 @@
 import "./styles/main.scss";
 import { useEffect, useState } from 'react';
+import Header from './components/Header';
 import Prompt from './components/Prompt';
-import Loading from './components/Loading';
+import Footer from './components/Footer';
 
 function App() {
 
-  const [loading, setLoading] = useState(false);
-
   return (
     <main className="App">
-      {loading ? <Loading /> : null}
-      <Prompt setLoading={setLoading} />
+      <Header />
+      <Prompt />
+      <Footer />
     </main>
   );
 }
