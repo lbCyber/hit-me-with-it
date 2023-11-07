@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Typewriter from 'typewriter-effect';
-import responses from '../data/responses.js';
+import responses from '../data/responses.js'; // Halloween's over, so I don't know, maybe shelve this for now?
 import Loading from './Loading';
 
 const { OpenAI } = require("openai");
@@ -70,18 +70,19 @@ const Prompt = () => {
   };
 
   return (
-    <div className="promptBox">
+    <form action="#" method="#" name="prompt" className="promptBox" onSubmit={fetchPrompt}>
       <div className="fields">
-        <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="Pick a genre." />
-        <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="Describe the protagonist." />
+        <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="Pick a genre." required />
+        <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="Describe the protagonist." required />
       </div>
       <div className="buttonContainer">
-        <button onClick={fetchPrompt} disabled={submitDisabled}>Click here for a prompt</button>
+        <button disabled={submitDisabled}>Click here for a prompt</button>
         {loading ? <Loading /> : null}
       </div>
-      {
-        typeReady ?
-        <Typewriter
+      <div className="promptResponse">
+        {
+          typeReady ?
+          <Typewriter
           options={{
             skipAddStyles: true,
             delay: 35
@@ -91,9 +92,10 @@ const Prompt = () => {
               setSubmissions([...submissions, promptResult])
             }).start();
           }}
-        /> : null
-      }
-    </div>
+          /> : null
+        }
+      </div>
+    </form>
   )
 };
 
