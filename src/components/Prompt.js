@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Typewriter from 'typewriter-effect';
+import responses from '../data/responses.js';
 
 const { OpenAI } = require("openai");
+
+console.log(responses)
 
 const aiConfig = {
   organization: process.env.REACT_APP_OPENAI_ORG,
@@ -11,57 +15,78 @@ const aiConfig = {
 const openaiStart = new OpenAI(aiConfig);
 
 const Prompt = ({setLoading}) => {
-  const [promptResult, setPromptResult] = useState("Prompt will appear here");
-  const [timer, setTimer] = useState(0);
+  const [promptResult, setPromptResult] = useState("");
+  const [promptCount, setPromptCount] = useState(0);
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+  const [typeReady, setTypeReady] = useState(false);
+  const [submissions, setSubmissions] = useState([]);
+  const [genre, setGenre] = useState("")
+  const [protag, setProtag] = useState("")
 
-  const fetchPrompt = () => {
-    const timerTick = () => {
-      setTimer(timer - 1000)
-      if (timer < 1) {
-        clearInterval(timerTick)
-      }
-    };
+  const fetchPrompt = (e) => {
+    e.preventDefault();
 
     const doTimer = () => { // avoid abuse, only 3 api calls per minute!
-      setTimer(10000);
-      setInterval(()=>timerTick, 1000)
+      setTimeout(()=>{setSubmitDisabled(false)}, 10000);
     }
 
-    async function doPrompt() {
-      await openaiStart.completions.create({
+    const doPrompt = () => {
+      setSubmitDisabled(true);
+      setPromptResult("")
+      setTypeReady(false)
+      console.log(`start - prompt is ${promptResult}`)
+      openaiStart.completions.create({
         prompt: prompt,
         model: "gpt-3.5-turbo-instruct",
         max_tokens: tokenLength,
         temperature: randomness,
-      }).then(async (res) => {
-        const resPrompt = res.choices[0].text.replace("\n", "")
+      }).then(async (res, rej) => {
+        const resPrompt = await res.choices[0].text.replace(/"\n/g, "")
         if (typeof resPrompt === "string") {
+          setPromptCount(promptCount + 1);
           setPromptResult(resPrompt);
         } else {
-          throw new Error("Something went wrong!");
+          throw new Error(`Something went wrong: ${rej}`);
         }
       }).catch((err)=>{
         alert(err);
       }).finally(()=>{
+        console.log(`end - prompt is ${promptResult}`)
         setLoading(false);
+        setTypeReady(true)
         doTimer();
       });
     }
 
-    const prompt = "write a good single line idea for a horror story. The protagonist is a robot."
+    const prompt = `write a good single line idea for a ${genre} story. The protagonist is ${protag}.`
     const tokenLength = 100;
     const randomness = 0;
     setLoading(true)
-    setTimeout(()=>{ // Should only run after set time elapsed (max 10 seconds)
-      doPrompt();
-    }, timer)
+    doPrompt();
   };
 
   return (
-    <>
-      <h3 onClick={fetchPrompt}>Click here for a prompt</h3>
-      <p>{promptResult}</p>
-    </>
+    <div className="promptBox">
+      <div className="fields">
+        <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="Pick a genre." />
+        <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="Describe the protagonist." />
+      </div>
+      <button onClick={fetchPrompt} disabled={submitDisabled}>Click here for a prompt</button>
+      {
+        typeReady ?
+        <Typewriter
+          options={{
+            skipAddStyles: true,
+            delay: 35
+          }}
+          onInit={(typewriter) => {
+            typewriter.typeString(promptResult).callFunction(() => {
+              setSubmissions([...promptResult])
+            }).start();
+          }}
+        /> : null
+      }
+    </div>
   )
 };
 
