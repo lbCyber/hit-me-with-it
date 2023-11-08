@@ -2,7 +2,10 @@ const Header = () => {
   return (
     <>
       <h1>Story Prompt Generator</h1>
-      <p className="headingDesc">Welcome! This is an AI-powered generator for basic story ideas! All you need to provide is...</p>
+      <div className="headingDesc">
+        <p>Hey there! This is an AI-powered generator for basic story ideas!</p>
+        <h2>All you need to provide is...</h2>
+      </div>
     </>
   )
 }

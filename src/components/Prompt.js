@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Typewriter from 'typewriter-effect';
 import responses from '../data/responses.js'; // Halloween's over, so I don't know, maybe shelve this for now?
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSwatchbook, faPersonRays } from "@fortawesome/free-solid-svg-icons";
 import Loading from './Loading';
 
 const { OpenAI } = require("openai");
@@ -42,7 +44,7 @@ const Prompt = () => {
         max_tokens: tokenLength,
         temperature: randomness,
       }).then(async (res, rej) => {
-        const resPrompt = await res.choices[0].text.replace(/\n/g, "").replace('"',"")
+        const resPrompt = await res.choices[0].text.replace(/[\n"]/g, "")
         if (typeof resPrompt === "string") {
           setPromptCount(promptCount + 1);
           setPromptResult(resPrompt);
@@ -54,7 +56,6 @@ const Prompt = () => {
       }).finally(()=>{
         setLoading(false);
         setTypeReady(true)
-
         doTimer();
       });
     }
@@ -65,21 +66,29 @@ const Prompt = () => {
     const randomness = 1;
     setLoading(true)
     doPrompt();
-    setGenre("")
-    setProtag("")
   };
 
   return (
     <form action="#" method="#" name="prompt" className="promptBox" onSubmit={fetchPrompt}>
       <div className="fields">
-        <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="Pick a genre." required />
-        <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="Describe the protagonist." required />
-      </div>
-      <div className="buttonContainer">
-        <button disabled={submitDisabled}>Click here for a prompt</button>
-        {loading ? <Loading /> : null}
+        <div className="genreBox fieldBox">
+          <input type="text" id="promptGenre" value={genre} onInput={e=>setGenre(e.target.value)} placeholder="a genre" required />
+          <div className="fieldImg">
+            <FontAwesomeIcon icon={faSwatchbook} />
+          </div>
+        </div>
+        <div className="protagBox fieldBox">
+          <input type="text" id="promptProtag" value={protag} onInput={e=>setProtag(e.target.value)} placeholder="and a protagonist" required/>
+          <div className="fieldImg">
+            <FontAwesomeIcon icon={faPersonRays} />
+          </div>
+        </div>
+        <div className="buttonContainer">
+          <button disabled={submitDisabled}>OK!</button>
+        </div>
       </div>
       <div className="promptResponse">
+        {loading ? <Loading /> : null}
         {
           typeReady ?
           <Typewriter

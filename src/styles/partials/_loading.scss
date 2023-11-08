@@ -1,12 +1,12 @@
 .bars-loading {
-  transform: scale(.3);
+  transform: scale(.45);
   position: relative;
   left: 0;
 }
 .bar-loading {
   height: 30px;
   width: 12px;
-  top: 0;
+  top: 30px;
   background-color: #48a0f0;
   position: absolute;
   pointer-events: none;
