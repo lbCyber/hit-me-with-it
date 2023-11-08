@@ -1,7 +1,7 @@
 .bars-loading {
   transform: scale(.45);
   position: relative;
-  left: 0;
+  left: calc(50% - 15px);
 }
 .bar-loading {
   height: 30px;
